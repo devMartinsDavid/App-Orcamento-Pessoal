@@ -9,9 +9,7 @@ class Despesa {
     }
     validarDados() {
         for (let i in this) {
-            if (this[i] === undefined || this[i] === '' || this[i] === null) {
-                return false;
-            }
+            if (this[i] === undefined || this[i] === '' || this[i] === null) { return false; }
         }
         return true;
     }
@@ -22,9 +20,7 @@ class Bd {
     constructor() {
         let id = localStorage.getItem('id');
 
-        if (id === null) {
-            localStorage.setItem('id', 0);
-        }
+        if (id === null) { localStorage.setItem('id', 0); }
     }
     // Recuperar dado dentro de localStorage
     getProximoId() {
@@ -44,10 +40,7 @@ class Bd {
         for (let i = 1; i <= id; i++) {
             let despesa = JSON.parse(localStorage.getItem(i));
             // Testar se existe a possibilidade de haver índices que foram pulados/removidos
-            if (despesa === null) {
-                continue;
-                // O continue avança para a interação seguinte antes do push
-            }
+            if (despesa === null) { continue; }// O continue avança para a interação seguinte antes do push
             despesa.id = i;
             despesas.push(despesa);
         }
@@ -76,20 +69,15 @@ let bd = new Bd();
 
 // Cadastrando despesas
 function cadastrarDispesas() {
-    let ano = document.getElementById('ano');
-    let mes = document.getElementById('mes');
-    let dia = document.getElementById('dia');
+    let data = document.getElementById('data');
     let tipo = document.getElementById('tipo');
     let descricao = document.getElementById('descricao');
-    let valor = document.getElementById('valor'); // Adicionando ponto e vírgula
-    let despesa = new Despesa(
-        ano.value,
-        mes.value, 
-        dia.value, 
-        tipo.value, 
-        descricao.value, 
-        valor.value
-    );
+    let valor = document.getElementById('valor');
+    
+    //dividindo data
+    data [ano, mes, dia] = data.value.split('-');
+
+    let despesa = new Despesa( ano, mes, dia, tipo.value, descricao.value, valor.value );
     if (despesa.validarDados()) {
         bd.gravar(despesa);
         document.getElementById('modal_title').innerHTML = 'Registro inserido com sucesso!';
@@ -118,30 +106,23 @@ function cadastrarDispesas() {
 // Função para carregar a lista de despesas
 function carregarListaDespesas(despesas = Array(), filtro = false) {
     // Mapeamento dos tipos de despesa
-    const tiposDespesa = {
-        '1': 'Alimentação',
-        '2': 'Educação',
-        '3': 'Lazer',
-        '4': 'Saúde',
-        '5': 'Transporte'
-    };
+    const tiposDespesa = { '1': 'Alimentação', '2': 'Educação', '3': 'Lazer', '4': 'Saúde', '5': 'Transporte' };
 
     // Função para retornar o tipo de despesa com base no número
     function obterTipoDespesa(numeroTipo) {
         return tiposDespesa[numeroTipo] || 'Tipo não especificado';
     }
 
-    if (despesas.length == 0 && filtro == false) {
-        despesas = bd.recuperarTodosRegistros();
-    }
+    if (despesas.length == 0 && filtro == false) { despesas = bd.recuperarTodosRegistros(); }
+
     let listaDespesas = document.getElementById('listaDespesas');
     listaDespesas.innerHTML = '';
-    despesas.forEach(function(d) {
+    despesas.forEach( d =>  {
         let linha = listaDespesas.insertRow();
         linha.insertCell(0).innerHTML = `${d.dia}/${d.mes}/${d.ano}`;
         linha.insertCell(1).innerHTML = obterTipoDespesa(d.tipo); // Utilização da função de mapeamento
         linha.insertCell(2).innerHTML = d.descricao;
-        linha.insertCell(3).innerHTML = `${d.valor} R$`;
+        linha.insertCell(3).innerHTML = d.valor;
 
         let btn = document.createElement('button');
         btn.className = 'btn btn-danger';

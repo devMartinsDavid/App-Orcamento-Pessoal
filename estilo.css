@@ -1,0 +1,16 @@
+#modal_title {
+    text-align: center;
+    width: 100%;
+}
+#texto-corpo{
+    text-align: center;
+    width: 100%;
+}
+.container-form-inicial{
+    margin-top: 10%;
+}
+@media screen and (max-width:599px) {
+    .body-form-mobile{
+        margin-top: 20%;
+    }
+}
